@@ -3,7 +3,8 @@ import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
+import ModelsScreen from '../screens/ModelsScreen';
+import CameraScreen from '../screens/CameraScreen';
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -12,24 +13,61 @@ export default function BottomTabNavigator({ navigation, route }) {
   // Set the header title on the parent stack navigator depending on the
   // currently active tab. Learn more in the documentation:
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  navigation.setOptions({ headerTitle: getHeaderTitle(route) });
-
+  navigation.setOptions(
+    { 
+      headerStyle: {
+        backgroundColor: '#111111',
+      },
+      headerTintColor: '#fff',
+      headerTitle: getHeaderTitle(route) ,
+      headerTitleStyle: {
+        alignSelf: 'center',
+        color:'rgb(1,175,250)',
+        fontWeight: 'bold',
+      },
+    }
+  );
+  navigation.setOptions({headerShown: route.state?.routes[route.state.index]?.name == "Home" ? false : true});
+  
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
+    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}
+      tabBarOptions={{
+              activeTintColor: 'rgb(1,175,250)',
+              inactiveTintColor: 'gray',
+              showLabel:true,
+              labelStyle:{
+                fontWeight:"bold",
+                fontSize:14
+              },
+              style:{
+                backgroundColor:"#111111",
+                height:60
+              },
+          }
+        }
+    >
+      <BottomTab.Screen
+        name="Camera"
+        component={CameraScreen}
+        options={{
+          title: 'Create',
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-add" />,
+        }}
+      />
       <BottomTab.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          title: 'Get Started',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-code-working" />,
+          title: 'Home',
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,
         }}
       />
       <BottomTab.Screen
-        name="Links"
-        component={LinksScreen}
+        name="Models"
+        component={ModelsScreen}
         options={{
-          title: 'Resources',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />,
+          title: 'Models',
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cube" />,
         }}
       />
     </BottomTab.Navigator>
@@ -41,8 +79,10 @@ function getHeaderTitle(route) {
 
   switch (routeName) {
     case 'Home':
-      return 'How to get started';
-    case 'Links':
-      return 'Links to learn more';
+      return null;
+    case 'Models':
+      return 'Your Models';
+    case 'Camera':
+      return 'Camera';
   }
 }
