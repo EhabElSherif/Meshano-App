@@ -4,6 +4,8 @@ import * as React from 'react';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import ModelsScreen from '../screens/ModelsScreen';
+import PreviewScreen from '../screens/PreviewScreen';
+import ModelScreen from '../screens/ModelScreen';
 import CameraScreen from '../screens/CameraScreen';
 
 const BottomTab = createBottomTabNavigator();
@@ -27,7 +29,7 @@ export default function BottomTabNavigator({ navigation, route }) {
       },
     }
   );
-  navigation.setOptions({headerShown: route.state?.routes[route.state.index]?.name == "Home" ? false : true});
+  navigation.setOptions({headerShown:true});
   
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}
@@ -70,6 +72,22 @@ export default function BottomTabNavigator({ navigation, route }) {
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cube" />,
         }}
       />
+      <BottomTab.Screen
+        name="Model"
+        component={ModelScreen}
+        options={{
+          title: 'Model',
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-add" />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Preview"
+        component={PreviewScreen}
+        options={{
+          title: 'Preview',
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,
+        }}
+      />
     </BottomTab.Navigator>
   );
 }
@@ -79,10 +97,14 @@ function getHeaderTitle(route) {
 
   switch (routeName) {
     case 'Home':
-      return null;
+      return 'Home';
     case 'Models':
       return 'Your Models';
     case 'Camera':
       return 'Camera';
+    case 'Model':
+      return 'Model';
+    case 'Preview':
+      return 'Preview';
   }
 }

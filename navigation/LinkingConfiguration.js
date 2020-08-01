@@ -8,7 +8,9 @@ export default {
       screens: {
         Home: 'home',
         Models: 'models',
+        Preview: 'preview',
         Camera: 'camera',
+        Model: 'model',
       },
     },
   },

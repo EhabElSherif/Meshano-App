@@ -22,11 +22,16 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "package": "com.meshano.Meshano",
+      "versionCode": 1
+    },
     "ios": {
       "supportsTablet": true
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "description": ""
   }
 }

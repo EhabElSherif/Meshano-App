@@ -8,35 +8,35 @@ var MODELS_PER_ROW = 2;
 var models = [
 	{
 		name:'Model 1',
-		path:require('./../assets/images/icon.png'),
+		path:require('./../assets/images/icon.png')
 	},{
-		name:'Model 1',
+		name:'Model 2',
 		path:require('./../assets/images/icon.png')
 
 	},{
-		name:'Model 1',
+		name:'Model 3',
 		path:require('./../assets/images/icon.png')
 
 	},{
-		name:'Model 1',
+		name:'Model 4',
 		path:require('./../assets/images/icon.png')
 
 	},{
-		name:'Model 1',
+		name:'Model 5',
 		path:require('./../assets/images/icon.png')
 
 	},{
-		name:'Model 1',
+		name:'Model 6',
 		path:require('./../assets/images/icon.png')
 
 	},{
-		name:'Model 1',
+		name:'Model 7',
 		path:require('./../assets/images/icon.png')
 
 	},
 ]
 
-export default function ModelsScreen() {
+export default function ModelsScreen(props) {
   return (
     <ScrollView style={styles.container}>
 		{renderRows(models)}
@@ -55,24 +55,32 @@ function scale(){
 
 function renderRow(models){
 	return models.map((model,i)=>{
-		console.log(model);
+		let p = model
 		return (
-			<TouchableOpacity key={i} style={[styles.modelButton]} activeOpacity={0.6}>
+			<TouchableOpacity key={i} style={[styles.modelButton, scale()]} activeOpacity={0.6}>
 				<Image source={model.path} style={[styles.modelImage, calculatedSize(), scale()]}></Image>
 				{/* <Text style={styles.modelTitle}>{model.name}</Text> */}
 			</TouchableOpacity>
 		)
 	});
 }
-
 function renderRows(models) {
 
+	let numberOfRows = Math.floor(models.length / MODELS_PER_ROW);
 	let rows = []
-	for(let i=0;i<models.length;i+=2){
-		let modelsForRow = [models[i]];
-		if (models[i+1] != undefined) modelsForRow.push(models[i+1]);
+	for (let i = 0; i < numberOfRows; i++) {
+		let modelsForRow = models.slice(i*MODELS_PER_ROW,MODELS_PER_ROW*(i+1))
 		rows.push(
 			<View style={styles.row} key={i}>
+				{renderRow(modelsForRow)}
+			</View>
+		)
+	}
+
+	if(models.length%MODELS_PER_ROW != 0){
+		let modelsForRow = models.slice(numberOfRows*MODELS_PER_ROW,models.length)
+		rows.push(
+			<View style={styles.row} key={numberOfRows*MODELS_PER_ROW}>
 				{renderRow(modelsForRow)}
 			</View>
 		)
@@ -84,13 +92,13 @@ const styles = StyleSheet.create({
   container: {
 	flex: 1,
 	flexDirection:'column',
-    backgroundColor: 'black',
+    backgroundColor: '#111111',
   },
   row:{
 	flexDirection:'row',
   },
   modelButton:{
-	backgroundColor:"#111111",
+	backgroundColor:"#33333355",
 	paddingBottom:10,
   },
   modelTitle:{
@@ -100,7 +108,7 @@ const styles = StyleSheet.create({
 	textAlign:'center'
   },
   modelImage:{
-	opacity:0.4,
+	opacity:1,
   },
   contentContainer: {
     paddingTop: 15,
