@@ -22,6 +22,27 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "packagerOpts": {
+      "assetExts": [
+        "ttf",
+        "mp4",
+        "dae",
+        "obj",
+        "amf",
+        "3mf",
+        "3ds",
+        "jpg",
+        "assimp",
+        "fbx",
+        "pmd",
+        "vmd",
+        "ply",
+        "stl",
+        "vtk",
+        "vtp",
+        "sea"
+      ]
+    },
     "android": {
       "package": "com.meshano.Meshano",
       "versionCode": 1

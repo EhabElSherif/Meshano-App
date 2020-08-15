@@ -1,169 +1,142 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Button, Dimensions, Alert, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Button, Dimensions, Alert, Image, Modal } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
-import { useFocusEffect } from '@react-navigation/native';
-import { useIsFocused } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import PreviewScreen from './PreviewScreen';
 
-function acceptedNumber(imagesCount){
-	if (imagesCount >= 10){
-		return {backgroundColor:"seagreen"}
-	}else{
-		return {backgroundColor:"crimson"}
+const MIN_NUMBER_OF_IMAGES = 20;
+
+export default class CameraScreen extends React.Component {
+	constructor(props){
+		super(props)
+		this.state = {
+			viewGallary:false,
+			isFocused:true,
+			camera:null,
+			hasCameraPermission: null,
+			type: Camera.Constants.Type.back,
+			capturedImages:Array(0),
+			exif:null
+		}
+		this.acceptedNumber = this.acceptedNumber.bind(this);
+		this.setViewGallary = this.setViewGallary.bind(this);
+		this.clearImages = this.clearImages.bind(this);
+		this.deleteImage = this.deleteImage.bind(this);
+		
+		this.props.navigation.addListener('focus', () => {
+			this.setState({isFocused:true});
+		});
+		this.props.navigation.addListener('blur', () => {
+			this.setState({isFocused:false});
+		});
+
 	}
-}
 
-export default function CameraScreen({navigation}) {
-	const [camera, setCamera] = useState({
-		hasCameraPermission: null,
-		type: Camera.Constants.Type.back,
-	});
-	const isFocused = useIsFocused();
-	const [cameraRef, setCameraRef] = useState(null);
-	const [recording, setRecording] = useState(false)
-	const [audio, setAudio] = useState(true)
-	const [capturedImages, addImage] = useState(Array(0))
+	async componentDidMount() {
+		const { status } = await Permissions.askAsync(Permissions.CAMERA);
+		this.setState({ hasCameraPermission: status === 'granted' });
+	}
 
-	useEffect(()=>{
-		if(!isFocused)
-			addImage(Array(0))
-	},[])
+	componentWillUnmount(){
+		this.setState({capturedImages:Array(0)})
+	}
 
-	useEffect(() => {
-		(async () => {
-			const { status } = await Camera.requestPermissionsAsync();
-			setCamera(prevState => ({ ...prevState, hasCameraPermission: status === 'granted'}));
-		})();
-	},[]);
-	
-	useEffect(() => {
-		(async () => {
-			const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-			setAudio(prevState => ({ ...prevState, audio: status === 'granted'}));
-		})();
-	}, []);
-	
-	if (camera.hasCameraPermission === null) {
-		return <View />;
-	} else if (camera.hasCameraPermission === false) {
-		return <Text>No access to camera</Text>;
-	} else {
-		return (
-			<View style={styles.cameraContainer}>
-				{isFocused ? 
-					<View style={{position:'relative',flex:1}}>
-						<Camera style={styles.cameraComponent} type={camera.type} ref={ref => {setCameraRef(ref) ;}}></Camera>
-						<TouchableOpacity style={styles.reverseButton}
-							activeOpacity={0.8}
-							onPress={() => {
-								setCamera({
-									type: camera.type === Camera.Constants.Type.back ? 
+	acceptedNumber = (imagesCount)=>{
+		if (imagesCount >= MIN_NUMBER_OF_IMAGES){
+			return {backgroundColor:"seagreen"}
+		}else{
+			return {backgroundColor:"crimson"}
+		}
+	}
+
+	setViewGallary = (viewGallary)=>{
+		this.setState({viewGallary:viewGallary})
+	}
+
+	clearImages = ()=>{
+		this.setState({capturedImages:Array(0)})
+	}
+
+	deleteImage = (id)=>{
+		console.log(this.state.capturedImages)
+		let capturedImages = this.state.capturedImages
+		const index = capturedImages.indexOf(id)
+		if (index!=-1){
+			capturedImages.splice(index,1)
+		}
+		this.setState({capturedImages:capturedImages})
+		console.log(this.state.capturedImages)
+	}
+
+	render(){
+		let capturedImages = this.state.capturedImages;
+		if (this.state.hasCameraPermission === null) {
+			return <View style={styles.cameraContainer}></View>;
+		} else if (this.state.hasCameraPermission === false) {
+			return <Text>No access to camera</Text>;
+		} else {
+			return (
+				<View style={styles.cameraContainer}>
+					{this.state.isFocused && (
+						<View style={{position:'relative',flex:1}}>
+							<Camera style={styles.cameraComponent}
+								type={this.type}
+								autoFocus={Camera.Constants.AutoFocus.on}
+								ref={ref => { this.state.camera = ref; }}></Camera>
+							<TouchableOpacity style={styles.reverseButton}
+								activeOpacity={0.8}
+								onPress={() => {
+									this.setState({
+										type: this.state.camera.type === Camera.Constants.Type.back ? 
 										Camera.Constants.Type.front
 										:
 										Camera.Constants.Type.back
 									});
 								}}>
-							<Ionicons style={{fontSize:30,color:"white"}} name="md-reverse-camera" ></Ionicons>
-						</TouchableOpacity>
-						<View style={styles.previewButton}>
-							<Image style={styles.previewButtonImage} resizeMode="stretch" resizeMethod="resize" source={require('./../assets/images/icon.png')}></Image>
-							<Text style={[styles.previewButtonText, acceptedNumber(capturedImages.length)]}>{capturedImages.length}/10</Text>
+								<Ionicons style={{fontSize:30,color:"white"}} name="md-reverse-camera" ></Ionicons>
+							</TouchableOpacity>
+							<TouchableOpacity style={styles.previewButton} activeOpacity={1}
+								onPress = {()=>{
+									this.setViewGallary(true)
+								}}
+							>
+								<Image style={styles.previewButtonImage} resizeMode="stretch" resizeMethod="resize" source={{uri:this.state.capturedImages[this.state.capturedImages.length-1]}}></Image>
+								<Text style={[styles.previewButtonText, this.acceptedNumber(capturedImages.length)]}>{capturedImages.length}/{MIN_NUMBER_OF_IMAGES}</Text>
+							</TouchableOpacity>
+							<TouchableOpacity style={styles.captureButton} activeOpacity={0.6}
+								onPress={() => {
+									this.state.camera.takePictureAsync({
+										'quality':1,
+										'skipProcessing':true,
+										'exif':false
+									}).then(({ uri, width, height, exif, base64 })=>{
+										capturedImages.push(uri);
+										this.setState(capturedImages)
+									})
+								}}
+							>
+							<Ionicons style={{fontSize:30,color:"rgb(1,175,250)"}} name="md-camera"></Ionicons>
+							</TouchableOpacity>
 						</View>
-						<TouchableOpacity style={styles.captureButton} activeOpacity={0.6}
-							onPress={() => {
-								const { uri, width, height, exif, base64 } = cameraRef.takePictureAsync({
-									'quality':0,
-									'exif':true,
-								})
-								const codec = 'jpg'
-								const type = `image/${codec}`;
-								
-								// const data = new FormData();
-								// data.append("image",{
-								// 	name: "mobile-image-upload",
-								// 	type,
-								// 	uri
-								// });
-								// try {
-								// 	await fetch("http://192.168.43.36:5000/sendimages", {
-								// 		method: "post",
-								// 		headers:{
-								// 			Accept: 'application/json',
-								// 			'Content-Type': 'multipart/form-data'
-								// 		},
-								// 		body: data
-								// 	}).then(response=>
-								// 		response.json()
-								// 	).then(responseJSON=>
-								// 		console.log(responseJSON['message'])
-								// 	).catch(error => {
-								// 		console.error(error);
-								// 	});
-								// } catch (e) {
-								// 	console.error(e);
-								// }
-								let newImage = uri;
-								
-								addImage(capturedImages.concat([newImage]))
-
-								// if(!recording){
-								// 	setRecording(true)
-								// 	const { uri, codec = "mp4" } = await cameraRef.recordAsync({
-								// 		'quality':'480p',
-								// 		'mute':true
-								// 	});
-								// 	const type = `video/${codec}`;
-
-								// 	const data = new FormData();
-								// 	data.append("video",{
-								// 		name: "mobile-video-upload",
-								// 		type,
-								// 		uri
-								// 	});
-								// 	console.log(data)
-								// 	try {
-								// 		await fetch("http://192.168.43.36:5000/sendvideo", {
-								// 			method: "post",
-								// 			headers:{
-								// 				Accept: 'application/json',
-								// 				'Content-Type': 'multipart/form-data'
-								// 			},
-								// 			body: data
-								// 		}).then(response=>
-								// 			response.json()
-								// 		).then(responseJSON=>
-								// 			console.log(responseJSON['message'])
-								// 		).catch(error => {
-								// 			console.error(error);
-								// 		});
-								// 	} catch (e) {
-								// 		console.error(e);
-								// 	}
-								// } else {
-								// 	setRecording(false)
-								// 	cameraRef.stopRecording()
-								// }
-							}}
-						>
-						<Ionicons style={{fontSize:30,color:"rgb(1,175,250)"}} name="md-camera"></Ionicons>
-						</TouchableOpacity>
-					</View>
-				:	
-				<ActivityIndicator style={{alignSelf:"center",flex:1,backgroundColor:"#111111",width:"100%"}} size="large" color="rgb(1,175,250)"></ActivityIndicator>
-				}
-			</View>
-		);
-	}  
+					)}
+					<Modal
+						visible={this.state.viewGallary}
+						animationType="slide"
+						transparent={true}
+						onRequestClose = {()=>{
+							this.setState({viewGallary:false})
+						}}
+					>
+						<PreviewScreen MIN_NUMBER_OF_IMAGES={MIN_NUMBER_OF_IMAGES} capturedImages={this.state.capturedImages} exif={this.state.exif} clearImages={this.clearImages} deleteImage={this.deleteImage} setViewGallary={this.setViewGallary}></PreviewScreen>
+					</Modal>
+				</View>
+			);
+		}  
+	}
 }
+
 const styles = StyleSheet.create({
-	s:{
-		position:'absolute',
-		width:25,
-		height:25,
-		backgroundColor:"red",
-	},
 	cameraContainer:{
 		flex: 1 ,
 		position:'relative',
@@ -221,7 +194,7 @@ const styles = StyleSheet.create({
 	previewButtonText:{
 		fontSize:15,
 		marginTop:-20,
-		color:"white",
+		color:"#bdbdbd",
 		width:"100%",
 		margin:0,
 		textAlign:"center",

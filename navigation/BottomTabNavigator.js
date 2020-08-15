@@ -4,8 +4,6 @@ import * as React from 'react';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import ModelsScreen from '../screens/ModelsScreen';
-import PreviewScreen from '../screens/PreviewScreen';
-import ModelScreen from '../screens/ModelScreen';
 import CameraScreen from '../screens/CameraScreen';
 
 const BottomTab = createBottomTabNavigator();
@@ -19,6 +17,7 @@ export default function BottomTabNavigator({ navigation, route }) {
     { 
       headerStyle: {
         backgroundColor: '#111111',
+        height:50,
       },
       headerTintColor: '#fff',
       headerTitle: getHeaderTitle(route) ,
@@ -53,7 +52,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={CameraScreen}
         options={{
           title: 'Create',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-add" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-add-circle" />,
         }}
       />
       <BottomTab.Screen
@@ -68,24 +67,8 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Models"
         component={ModelsScreen}
         options={{
-          title: 'Models',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cube" />,
-        }}
-      />
-      <BottomTab.Screen
-        name="Model"
-        component={ModelScreen}
-        options={{
           title: 'Model',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-add" />,
-        }}
-      />
-      <BottomTab.Screen
-        name="Preview"
-        component={PreviewScreen}
-        options={{
-          title: 'Preview',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cube" />,
         }}
       />
     </BottomTab.Navigator>
@@ -101,10 +84,6 @@ function getHeaderTitle(route) {
     case 'Models':
       return 'Your Models';
     case 'Camera':
-      return 'Camera';
-    case 'Model':
-      return 'Model';
-    case 'Preview':
-      return 'Preview';
+      return 'Create';
   }
 }

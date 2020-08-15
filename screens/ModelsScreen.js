@@ -1,91 +1,147 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { StyleSheet, Dimensions, Image, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Dimensions, Image, Text, View, TouchableOpacity, Modal, SafeAreaView } from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
+import ModelScreen from './ModelScreen'
+
 const windowWidth = Dimensions.get('window').width;
 var MODELS_PER_ROW = 2;
-var models = [
-	{
-		name:'Model 1',
-		path:require('./../assets/images/icon.png')
-	},{
-		name:'Model 2',
-		path:require('./../assets/images/icon.png')
 
-	},{
-		name:'Model 3',
-		path:require('./../assets/images/icon.png')
+export default class ModelsScreen extends React.Component{
 
-	},{
-		name:'Model 4',
-		path:require('./../assets/images/icon.png')
+	constructor(props){
+		super(props)
+		this.state = {
+			viewModel:false,
+			isFocused:true,
+			models:[
+				{
+					name:'Model 1',
+					path:require('./../assets/images/icon.png')
+				},{
+					name:'Model 2',
+					path:require('./../assets/images/icon.png')
+			
+				},{
+					name:'Model 3',
+					path:require('./../assets/images/icon.png')
+			
+				},{
+					name:'Model 4',
+					path:require('./../assets/images/icon.png')
+			
+				},{
+					name:'Model 5',
+					path:require('./../assets/images/icon.png')
+			
+				},{
+					name:'Model 6',
+					path:require('./../assets/images/icon.png')
+			
+				},{
+					name:'Model 7',
+					path:require('./../assets/images/icon.png')
+			
+				},
+			],
+			selectedModel:null,
+			uri:null
+		}
 
-	},{
-		name:'Model 5',
-		path:require('./../assets/images/icon.png')
+		this.calculatedSize = this.calculatedSize.bind(this) 
+		this.scale = this.scale.bind(this) 
+		this.renderRow = this.renderRow.bind(this) 
+		this.renderRow = this.renderRow.bind(this) 
+		this.setViewModel = this.setViewModel.bind(this)
+		this.setSnap = this.setSnap.bind(this)
+		
+		this.props.navigation.addListener('focus', () => {
+			this.setState({isFocused:true});
+		});
+		this.props.navigation.addListener('blur', () => {
+			this.setState({isFocused:false});
+		});
+	}
 
-	},{
-		name:'Model 6',
-		path:require('./../assets/images/icon.png')
+	setViewModel = (viewModel)=>{
+		this.setState({viewModel:viewModel})
+	}
 
-	},{
-		name:'Model 7',
-		path:require('./../assets/images/icon.png')
+	setSnap = (uri)=>{
+		this.setState({uri:uri})
+		console.log("BARRA",this.state.uri)
+	}
 
-	},
-]
+	calculatedSize(){
+		var size = windowWidth / MODELS_PER_ROW
+		return {width: size, height: size}
+	}
+	
+	scale(){
+		return {transform:[{scale:0.9}]}
+	}
+	
+	renderRow(models){
+		return models.map((model,i)=>{
+			return (
+				<TouchableOpacity key={i} style={[styles.modelButton, this.scale()]} activeOpacity={0.6}
+					onPress={()=>{
+						this.setViewModel(true)
+						this.state.selectedModel = model
+					}}
+				>
+					<Image source={{uri:this.state.uri}} style={[styles.modelImage, this.calculatedSize(), this.scale()]}></Image>
+					{/* <Text style={styles.modelTitle}>{model.name}</Text> */}
+				</TouchableOpacity>
+			)
+		});
+	}
+	renderRows(models) {
+	
+		let numberOfRows = Math.floor(models.length / MODELS_PER_ROW);
+		let rows = []
+		for (let i = 0; i < numberOfRows; i++) {
+			let modelsForRow = models.slice(i*MODELS_PER_ROW,MODELS_PER_ROW*(i+1))
+			rows.push(
+				<View style={styles.row} key={i}>
+					{this.renderRow(modelsForRow)}
+				</View>
+			)
+		}
+	
+		if(models.length%MODELS_PER_ROW != 0){
+			let modelsForRow = models.slice(numberOfRows*MODELS_PER_ROW,models.length)
+			rows.push(
+				<View style={styles.row} key={numberOfRows*MODELS_PER_ROW}>
+					{this.renderRow(modelsForRow)}
+				</View>
+			)
+		}
+		return rows;
+	}
 
-export default function ModelsScreen(props) {
-  return (
-    <ScrollView style={styles.container}>
-		{renderRows(models)}
-    </ScrollView>
-  );
-}
-
-function calculatedSize(){
-	var size = windowWidth / MODELS_PER_ROW
-	return {width: size, height: size}
-}
-
-function scale(){
-	return {transform:[{scale:0.9}]}
-}
-
-function renderRow(models){
-	return models.map((model,i)=>{
-		let p = model
+	render(){
 		return (
-			<TouchableOpacity key={i} style={[styles.modelButton, scale()]} activeOpacity={0.6}>
-				<Image source={model.path} style={[styles.modelImage, calculatedSize(), scale()]}></Image>
-				{/* <Text style={styles.modelTitle}>{model.name}</Text> */}
-			</TouchableOpacity>
-		)
-	});
-}
-function renderRows(models) {
-
-	let numberOfRows = Math.floor(models.length / MODELS_PER_ROW);
-	let rows = []
-	for (let i = 0; i < numberOfRows; i++) {
-		let modelsForRow = models.slice(i*MODELS_PER_ROW,MODELS_PER_ROW*(i+1))
-		rows.push(
-			<View style={styles.row} key={i}>
-				{renderRow(modelsForRow)}
-			</View>
-		)
+			this.state.isFocused && (
+				<View style={styles.container}>
+					<ScrollView style={{position:"relative",flex:1}}>
+						{this.renderRows(this.state.models)}
+					</ScrollView>
+					<Modal
+						visible={this.state.viewModel}
+						animationType="slide"
+						transparent={true}
+						onRequestClose = {()=>{
+							this.setState({viewModel:false})
+						}}
+					>
+						<ModelScreen model={this.state.selectedModel} setSnap={this.setSnap} setViewModel={this.setViewModel}></ModelScreen>
+					</Modal>
+				</View>
+			)
+		);
 	}
-
-	if(models.length%MODELS_PER_ROW != 0){
-		let modelsForRow = models.slice(numberOfRows*MODELS_PER_ROW,models.length)
-		rows.push(
-			<View style={styles.row} key={numberOfRows*MODELS_PER_ROW}>
-				{renderRow(modelsForRow)}
-			</View>
-		)
-	}
-	return rows;
 }
 
 const styles = StyleSheet.create({
