@@ -7,13 +7,20 @@
 <h2>Screenshots:</h2>
 <hr style="border-width:1px;margin-bottom:30px;">
 <div style="display:flex;flex-direction:row;margin-bottom:20px">
-    <img style="display:flex;margin:auto" src="./screenshots/home.png">
-    <img style="display:flex;margin:auto" src="./screenshots/home.png">
+    <img style="margin:auto;height:480px;" src="./screenshots/launcher_icon.png">
+    <img style="margin:auto;height:480px;" src="./screenshots/home.png">
+    <img style="margin:auto;height:480px;" src="./screenshots/camera.png">
+    <img style="margin:auto;height:480px;" src="./screenshots/gallery_complete.png">
 </div>
 <div style="display:flex;flex-direction:row;margin-bottom:20px">
-    <img style="display:flex;margin:auto" src="./screenshots/home.png">
-    <img style="display:flex;margin:auto" src="./screenshots/home.png">
-    <img style="display:flex;margin:auto" src="./screenshots/home.png">
+    <img style="margin:auto;height:480px;" src="./screenshots/gallery_clear.png">
+    <img style="margin:auto;height:480px;" src="./screenshots/gallery_remove.png">
+    <img style="margin:auto;height:480px;" src="./screenshots/gallery_limit.png">
+    <img style="margin:auto;height:480px;" src="./screenshots/processing.png">
+</div>
+<div style="display:flex;flex-direction:row;margin-bottom:20px">
+    <img style="margin:auto;height:480px;" src="./screenshots/model.png">
+    <img style="margin:auto;height:480px;" src="./screenshots/all_models.png">
 </div>
 <h2>Future Work:</h2>
 <hr style="border-width:1px">
