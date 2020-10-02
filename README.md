@@ -8,7 +8,7 @@
 <hr style="border-width:1px;margin-bottom:30px;">
 <div style="display:flex;flex-direction:row;margin-bottom:20px">
     <img style="margin:auto;height:480px;" src="./screenshots/launcher_icon.png">
-    <img style="margin:auto;height:480px;" src="./screenshots/home.png">
+    <img style="margin:auto;height:480px;" src="./screenshots/home.PNG">
     <img style="margin:auto;height:480px;" src="./screenshots/camera.png">
     <img style="margin:auto;height:480px;" src="./screenshots/gallery_complete.png">
 </div>
