@@ -26,20 +26,20 @@
 
 ## Screenshots
 <p align='center'>
-    <img height='480' src="./screenshots/launcher_icon.png">
-    <img height='480' src="./screenshots/home.PNG">
-    <img height='480' src="./screenshots/camera.png">
-    <img height='480' src="./screenshots/gallery_complete.png">
+    <img height='400' src="./screenshots/launcher_icon.png">
+    <img height='400' src="./screenshots/home.PNG">
+    <img height='400' src="./screenshots/camera.png">
+    <img height='400' src="./screenshots/gallery_complete.png">
 </p>
 <p align='center'>
-    <img height='480' src="./screenshots/gallery_clear.png">
-    <img height='480' src="./screenshots/gallery_remove.png">
-    <img height='480' src="./screenshots/gallery_limit.png">
-    <img height='480' src="./screenshots/processing.png">
+    <img height='400' src="./screenshots/gallery_clear.png">
+    <img height='400' src="./screenshots/gallery_remove.png">
+    <img height='400' src="./screenshots/gallery_limit.png">
+    <img height='400' src="./screenshots/processing.png">
 </p>
 <p align='center'>
-    <img height='480' src="./screenshots/model.png">
-    <img height='480' src="./screenshots/all_models.png">
+    <img height='400' src="./screenshots/model.png">
+    <img height='400' src="./screenshots/all_models.png">
 </p>
 
 ## Future Work
