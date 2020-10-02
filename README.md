@@ -17,12 +17,14 @@
 
 </div>
 
-<p>
-    Meshano App is the client side of Meshano graduation project.<br>
-    It's a cross-platform mobile to reconstruct 3D model of an object from its images taken by mobile camera with no special specifications.<br>
-    It is implemented using <a href="https://reactnative.dev">React Native</a> and <a href="https://expo.io/">Expo</a>.
-</p>
-<h2>Screenshots:</h2>
+## About The Project
+> Meshano App is the client side of Meshano graduation project.<br>It's a cross-platform mobile to reconstruct 3D model of an object from its images taken by mobile camera with no special specifications.
+
+## Tools
+- [React Native](https://reactnative.dev)
+- [Expo](https://expo.io/")
+
+## Screenshots
 <p align='center'>
     <img height='480' src="./screenshots/launcher_icon.png">
     <img height='480' src="./screenshots/home.PNG">
@@ -39,7 +41,7 @@
     <img height='480' src="./screenshots/model.png">
     <img height='480' src="./screenshots/all_models.png">
 </p>
-<h2>Future Work:</h2>
-<li>
-Save the reconstructed models</li>
-<li>View all created models in the app</li>
+
+## Future Work
+- Save the reconstructed models
+- View all created models in the app
