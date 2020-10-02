@@ -22,7 +22,7 @@
 
 ## Tools
 - [React Native](https://reactnative.dev)
-- [Expo](https://expo.io/")
+- [Expo](https://expo.io/)
 
 ## Screenshots
 <p align='center'>
